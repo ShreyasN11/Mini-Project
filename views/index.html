@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <section id="logged-out-view">
+        <div class="container">
+            <h1 class="app-title">ACCESS DATABASE</h1>
+            
+            <div class="provider-buttons">
+                <button id="sign-in-with-google-btn" class="provider-btn">
+                    Authenticate with Google
+                </button>
+            </div>
+            
+            <form class="auth-fields-and-buttons" action="/login" method="post">
+                <input id="email-input" type="email" placeholder="Username" name="Email">
+                <input id="password-input" type="password" placeholder="Password" name="Password">                
+                <button id="sign-in-btn" class="primary-btn" type="submit">Authenticate</button>
+            </form>
+        </div>
+    </section>
+</body>
+
+</html>

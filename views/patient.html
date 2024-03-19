@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <section id="logged-out-view">
+        <div class="container">
+            <h1 class="app-title">SEARCH PATIENT</h1>
+            
+            <div class="auth-fields-and-buttons">
+                <input id="aadhar-input" type="text" placeholder="AADHAR-NUMBER">                
+                <button id="find-patient-btn" class="primary-btn">Find-Patient</button>
+            </div>
+            <div id="patient-details"></div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('find-patient-btn').addEventListener('click', function() {
+            const aadharNumber = document.getElementById('aadhar-input').value;
+
+            fetch('/searchPatient', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ aadharNumber: aadharNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const patientDetailsDiv = document.getElementById('patient-details');
+                patientDetailsDiv.innerHTML = `
+                <h2>Patient Details</h2>
+                <p>Name: ${data.Name}</p>
+                <p>Age: ${data.Age}</p>
+                <p>Gender: ${data.Gender}</p>
+                <p>Blood Group: ${data.BloodGroup}</p>
+                <p>Medical Condition: ${data.MedicalCondition}</p>
+                <p>Hospital: ${data.Hospital}</p>
+                <p>Medication Allergy: ${data.MedicationAllergy}</p>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+
+
+
+</html>
