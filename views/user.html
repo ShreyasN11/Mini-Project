@@ -12,18 +12,21 @@
 <body>
     <section id="logged-out-view">
         <div class="container">
-            <h1 class="app-title">SEARCH PATIENT</h1>
-            
-            <div class="auth-fields-and-buttons">
-                <input id="aadhar-input" type="text" placeholder="AADHAR-NUMBER">                
-                <button id="find-patient-btn" class="primary-btn">Find-Patient</button>
+            <div id="disappear">
+                <h1 class="app-title">Get Verification Link</h1>            
+                <div class="auth-fields-and-buttons" >
+                    <input id="email-input" type="email" placeholder="Email-Id" name="Email">
+                    <input id="aadhar-input" type="text" placeholder="Aadhar Number">                
+                    <button id="verify-btn" class="primary-btn">Verify</button>
+                </div>
             </div>
+            
             <div id="patient-details"></div>
         </div>
     </section>
 
     <script>
-        document.getElementById('find-patient-btn').addEventListener('click', async function() {
+        document.getElementById('verify-btn').addEventListener('click', async function() {
             const aadharNumber = document.getElementById('aadhar-input').value;
             console.log(JSON.stringify({ aadharNumber: aadharNumber }));
             try {
@@ -50,6 +53,8 @@
                     <p>Hospital: ${data.Hospital}</p>
                     <p>Medication Allergy: ${data.MedicationAllergy}</p>
                 `;
+                const dissapear = document.getElementById('disappear');
+                dissapear.setAttribute("style", "display: none;")
             } catch (error) {
                 console.error('Error:', error);
             }

@@ -7,26 +7,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
     <link rel="stylesheet" href="css/style.css" />
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
 </head>
 
 <body>
     <section id="logged-out-view">
         <div class="container">
-            <h1 class="app-title">ACCESS DATABASE</h1>
-            
-            <div class="provider-buttons">
-                <button id="sign-in-with-google-btn" class="provider-btn">
-                    Authenticate with Google
-                </button>
-            </div>
-            
-            <form class="auth-fields-and-buttons" action="/login" method="post">
+            <h1 class="app-title">ACCESS DATABASE</h1>            
+            <form class="auth-fields-and-buttons" id="login-form">
                 <input id="email-input" type="email" placeholder="Username" name="Email">
                 <input id="password-input" type="password" placeholder="Password" name="Password">                
                 <button id="sign-in-btn" class="primary-btn" type="submit">Authenticate</button>
             </form>
         </div>
     </section>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const firebaseConfig = {
+                
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+            document.getElementById('login-form').addEventListener('submit', function(event) {
+                event.preventDefault(); 
+                const email = document.getElementById('email-input').value;
+                const password = document.getElementById('password-input').value;
+
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                    .then(userCredential => {
+                        return userCredential.user.getIdToken();
+                    })
+                    .then(idToken => {
+                        fetch('/validateIdToken?idToken=' + idToken)
+                            .then(response => {
+                                if (response.ok) {
+                                    fetch('/searchRole', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ email: email })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        //console.log(data);
+                                        if (data.role === 'user') {
+                                            window.location.href = '/user?idToken=' + idToken;
+                                        } else {
+                                            window.location.href = '/patient?idToken=' + idToken;
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error(error);
+                                        alert("Error fetching role");
+                                    });
+                                } else {
+                                    alert("Unauthorized here");
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error.message); 
+                                alert("Unauthorized");
+                            });
+                    })
+                    .catch(error => {
+                        alert("Invalid Login id or password");
+                        console.error(error.message); 
+                    });
+            });
+        });
+    </script>
 </body>
 
 </html>
